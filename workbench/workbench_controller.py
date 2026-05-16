@@ -55,5 +55,5 @@ def check_doctor():
 
 
 if __name__ == "__main__":
-    logger.info(check_assistant("suck my dick"))
+    logger.info(check_assistant("momo"))
 
