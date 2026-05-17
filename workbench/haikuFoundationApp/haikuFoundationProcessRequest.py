@@ -1,130 +1,253 @@
 import json
 
 
-# ----------------------------
+# =========================================================
 # Controllers
-# ----------------------------
+# =========================================================
 
 class HomeController:
+
     def get(self, event):
-        return {"module": "HOME", "action": "GET"}
+        return {
+            "module": "HOME",
+            "action": "GET"
+        }
 
     def post(self, event):
-        return {"module": "HOME", "action": "POST"}
+        return {
+            "module": "HOME",
+            "action": "POST"
+        }
 
 
 class ExploreController:
+
     def get(self, event):
-        return {"module": "EXPLORE", "action": "GET"}
+        return {
+            "module": "EXPLORE",
+            "action": "GET"
+        }
+
+    def post(self, event):
+        return {
+            "module": "EXPLORE",
+            "action": "POST"
+        }
 
 
 class MessagesController:
+
     def get(self, event):
-        return {"module": "MESSAGES", "action": "GET"}
+        return {
+            "module": "MESSAGES",
+            "action": "GET"
+        }
 
 
 class LogoutController:
+
     def get(self, event):
-        return {"module": "LOGOUT", "action": "GET"}
+        return {
+            "module": "LOGOUT",
+            "action": "GET"
+        }
 
 
 class LoginController:
+
     def get(self, event):
-        return {"module": "LOGIN", "action": "GET"}
+        return {
+            "module": "LOGIN",
+            "action": "GET"
+        }
 
-
-class LoginController:
     def post(self, event):
-        return {"module": "LOGIN", "action": "POST"}
+        return {
+            "module": "LOGIN",
+            "action": "POST"
+        }
 
 
 class NotFoundController:
+
     def handle(self, event):
-        return {"error": "Route not found"}
+        return {
+            "error": "Route not found"
+        }
 
 
-# ----------------------------
-# Controller registry
-# ----------------------------
+# =========================================================
+# Controller Registry
+# =========================================================
 
 CONTROLLERS = {
     "/home": HomeController(),
     "/explore": ExploreController(),
     "/login": LoginController(),
+    "/messages": MessagesController(),
+    "/logout": LogoutController(),
 }
 
 FALLBACK = NotFoundController()
 
 
-# ----------------------------
+# =========================================================
 # Helpers
-# ----------------------------
+# =========================================================
 
 def parse_body(event):
+
     body = event.get("body")
+
     if not body:
         return {}
 
     try:
         return json.loads(body)
-    except json.JSONDecodeError:
+
+    except Exception as e:
+        print("JSON parse error:", e)
         return {}
 
 
-def response(status, body):
+def build_response(status, body):
+
     return {
         "statusCode": status,
+
         "headers": {
-            "Content-Type": "application/json",
+
+            # ---------------- CORS ----------------
             "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "Content-Type,Authorization",
+            "Access-Control-Allow-Methods": "OPTIONS,GET,POST,PUT,PATCH,DELETE",
+
+            # ---------------- CONTENT ----------------
+            "Content-Type": "application/json"
         },
+
         "body": json.dumps(body)
     }
 
 
-# ----------------------------
-# Lambda handler
-# ----------------------------
+# =========================================================
+# Lambda Handler
+# =========================================================
 
 def lambda_handler(event, context):
-    print("event:", event)
 
-    http_method = (event.get("httpMethod") or "").upper()
+    print("EVENT:")
+    print(json.dumps(event, indent=2))
+
+    http_method = (
+        event.get("httpMethod", "")
+        .upper()
+    )
+
+    # =====================================================
+    # HANDLE CORS PREFLIGHT
+    # =====================================================
+
+    if http_method == "OPTIONS":
+
+        return build_response(
+            200,
+            {
+                "message": "CORS preflight success"
+            }
+        )
+
+    # =====================================================
+    # PARSE BODY
+    # =====================================================
 
     body = parse_body(event)
 
-    # THIS is your real router key
+
+    # =====================================================
+    # ROUTE
+    # =====================================================
+
     request_method = body.get("requestMethod")
 
     if not request_method:
-        return response(400, {"error": "Missing requestMethod in body"})
 
-    controller = CONTROLLERS.get(request_method, FALLBACK)
+        return build_response(
+            400,
+            {
+                "error": "Missing requestMethod"
+            }
+        )
 
-    # map HTTP method → function
-    handler = getattr(controller, http_method.lower(), None)
+    controller = CONTROLLERS.get(
+        request_method,
+        FALLBACK
+    )
+
+    # =====================================================
+    # METHOD RESOLUTION
+    # =====================================================
+
+    handler = getattr(
+        controller,
+        http_method.lower(),
+        None
+    )
 
     if not handler:
-        return response(405, {
-            "error": f"HTTP method {http_method} not supported for {request_method}"
-        })
 
-    result = handler({
+        return build_response(
+            405,
+            {
+                "error": f"{http_method} not supported for {request_method}"
+            }
+        )
+
+    # =====================================================
+    # EXECUTE CONTROLLER
+    # =====================================================
+
+    controller_event = {
+
         "httpMethod": http_method,
-        "route": request_method,
-        "body": body,
-        "headers": event.get("headers", {}),
-        "user": event.get("requestContext", {}).get("authorizer")
-    })
 
-    return response(200, result)
+        "route": request_method,
+
+        "body": body,
+
+        "headers": event.get("headers", {}),
+
+        "user": (
+            event
+            .get("requestContext", {})
+            .get("authorizer")
+        )
+    }
+
+    result = handler(controller_event)
+
+    # =====================================================
+    # SUCCESS RESPONSE
+    # =====================================================
+
+    return build_response(
+        200,
+        result
+    )
+
+
+# =========================================================
+# Local Test
+# =========================================================
 
 
 if __name__ == "__main__":
+    # For local testing
     test_event = {
         "httpMethod": "POST",
         "body": json.dumps({
             "requestMethod": "/home"
         })
     }
-    print(lambda_handler(test_event, None))
+    response = lambda_handler(test_event, None)
+    print(response)
