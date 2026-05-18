@@ -438,6 +438,23 @@ TOPICS_LIST = [
   "Addiction"
 ]
 
+HAIKU_TYPES = {
+  "Traditional": "Traditional haiku is the original form of haiku poetry that was practiced in Japan. It typically consists of three lines with a 5-7-5 syllable pattern. The syllables are counted in the Japanese language, where one sound unit equals one syllable. ",
+  "Modern": "Modern haiku, also known as free-form or contemporary haiku, has evolved from its traditional roots to include more flexibility in syllable count and format. While traditional haiku adheres to a strict 5-7-5 syllable pattern, modern haiku poets often experiment with different syllable counts and formats to achieve a more minimalist style. ",
+  "Senryu": "Senryu is a form of haiku that focuses on human nature, emotions, and social commentary. It shares the same 5-7-5 syllable structure as traditional haiku but often explores themes of humor, irony, and satire. Senryu is more lighthearted and less focused on nature compared to traditional haiku.",
+  "Haibun": "Haibun is a combination of prose and haiku. It typically consists of a prose section followed by a haiku. The prose can be a narrative, a personal reflection, or a descriptive passage, while the haiku serves as a poetic response or complement to the prose. Haibun allows for a more expansive exploration of themes and ideas while still incorporating the concise and evocative nature of haiku.",
+  "Haiga": "Haiga is a form of haiku that combines poetry with visual art. It typically consists of a haiku poem accompanied by a painting, drawing, or photograph. The visual element is meant to enhance the meaning and emotional impact of the haiku, creating a harmonious blend of words and images. Haiga allows for a multi-sensory experience, where the visual and verbal elements work together to evoke a deeper response from the reader.",
+  "Renga": "Renga is a collaborative form of haiku poetry that involves multiple poets contributing alternating verses. It typically consists of a series of linked haiku, where each poet takes turns writing a verse that connects to the previous one. Renga can be structured in various ways, but it often follows a pattern of 5-7-5 syllables for the first verse, followed by 7-7 syllables for the second verse, and then alternating between 5-7-5 and 7-7 syllables for subsequent verses. Renga allows for a dynamic and interactive poetic experience, where poets can build upon each other's ideas and create a cohesive narrative or thematic progression.",
+  "Tanka": "Tanka is a form of haiku that consists of five lines with a syllable pattern of 5-7-5-7-7. It is an extension of traditional haiku and allows for a more expansive expression of thoughts and emotions. Tanka often explores themes of love, nature, and human experience, and it provides a platform for poets to delve deeper into their subject matter while still maintaining the concise and evocative nature of haiku."
+}
+
+
+TRENDING_LIST = ["Romantic", "Funny",
+                 "Irony", "Absurdity",
+                 "Celebrity", "Fame",
+                 "Comedy", "Drama", "Romance"]
+
+
 
 class HomeController:
 
@@ -607,6 +624,47 @@ class SettingsController:
         }
 
 
+class TrendingController:
+
+  def get(self, event):
+    return {
+      "module": "TRENDING",
+      "action": "GET"
+    }
+
+  def post(self, event):
+    return {
+      "module": "TRENDING",
+      "action": "POST"
+    }
+
+
+class HaikuController:
+
+  def get(self, event):
+    return {
+      "module": "HAIKU",
+      "action": "GET"
+    }
+
+  def post(self, event):
+    return {
+      "module": "HAIKU",
+      "action": "POST"
+    }
+
+
+class HaikuTypesController:
+
+  def get(self, event):
+    return {
+      "module": "HAIKUTYPES",
+      "action": "GET"
+    }
+
+  def post(self, event):
+    return HAIKU_TYPES
+
 class NotFoundController:
 
     def handle(self, event):
@@ -627,6 +685,8 @@ CONTROLLERS = {
     "/featured": FeaturedController(),
     "/write": WriteController(),
     "/profile": ProfileController(),
+    "/trending": TrendingController(),
+    "/haiku": HaikuController(),
     "/messages": MessagesController(),
     "/settings": SettingsController(),
     "/notifications": NotificationsController(),
@@ -816,7 +876,7 @@ if __name__ == "__main__":
     event = {'resource': '/{proxy+}', 'path': '/haiku-foundation-path', 'httpMethod': 'POST',
              'headers': {'accept': 'application/json, text/plain, */*', 'accept-encoding': 'gzip, deflate, br, zstd',
                          'accept-language': 'en-US,en;q=0.9',
-                         'Authorization': 'Bearer eyJraWQiOiJCYk5XMlFHNnVnTUtZSGJWUGRTdysrcDVzUG1TTzVPR20wWk9DVVZNbmhVPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI4NGE4NjRkOC0yMGQxLTcwNjQtZGYxNC0yYTNhZmVjMGYxMjUiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV8xcGdxU3pmNDUiLCJjbGllbnRfaWQiOiIzcTM0YzQ4bzZmdmFxYmRtc3N2dW92dTg2ayIsIm9yaWdpbl9qdGkiOiI3Yjc5OWVkMi1iYjkwLTRlMGQtOWUyYS1lZmNhOTAyMWFhNzQiLCJldmVudF9pZCI6ImFhMmZhZDc3LTYyNzEtNDI1Ny04YzE1LTNiZjg4NjZlYTJlNyIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3NzkwNDAzNTIsImV4cCI6MTc3OTA0Mzk1MiwiaWF0IjoxNzc5MDQwMzUyLCJqdGkiOiI5ZWE2M2ZiZS1kYWY4LTQyYzgtYTQ5ZS1hN2U4YWUwYzgzMTMiLCJ1c2VybmFtZSI6InNhbXNvbmJhYnVqaSJ9.EbsUU5PogY_iEufA_a4xcECuRK9JDFfXy2YMZ1xq3aS2qj6UxYK-blWTTuHr6vUTWeFHuUGZ_6QcFrfmbS-x6K04lLoic_4vdC41m4zlSAdnJyRmanINMDvFQzvYc2DiNISSEKJy3aw65a338UPlzY23VucHmfZvAgvs0AjdM6ynva417IwRy7PFwDsEQ4AN5m-7JpG4EpnCAJZN0QuqpvBEYiCh1WYEtIhdu7mCf_PaoBNmXBSzLt5rmuV6Q6pBuxI5UQ_dEhMFDGfeHpOViLz3rm1woiS55w-HyhOonBScVAwgb4UUI5DV2r6WKXg4dPCbaxGZnxOl4GjpBZ4V4w',
+                         'Authorization': 'Bearer eyJraWQiOiJCYk5XMlFHNnVnTUtZSGJWUGRTdysrcDVzUG1TTzVPR20wWk9DVVZNbmhVPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI4NGE4NjRkOC0yMGQxLTcwNjQtZGYxNC0yYTNhZmVjMGYxMjUiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV8xcGdxU3pmNDUiLCJjbGllbnRfaWQiOiIzcTM0YzQ4bzZmdmFxYmRtc3N2dW92dTg2ayIsIm9yaWdpbl9qdGkiOiI3MmJhZjg1YS1hMDhkLTQzOTgtYmZkMi00NDhmOTAzMTIwMmQiLCJldmVudF9pZCI6IjY5OGJiZjZmLTFmNWUtNDc0Yy1iNzQzLWE0YTljYjcwMDc4ZSIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3NzkwNDk1MTgsImV4cCI6MTc3OTA1MzExOCwiaWF0IjoxNzc5MDQ5NTE4LCJqdGkiOiJkZDUxMThjNy0zMjFiLTRhNjUtODIzYy1lZTM3YWYzMjkxOWUiLCJ1c2VybmFtZSI6InNhbXNvbmJhYnVqaSJ9.MDVbCb4kXYi8y0ySSRM94KeJV4m0pzLa8CUaQ78Kpyo0tpL87kD4rxfTGy6wNTzk5xdam7-aiQUbM317gphUsAIw4zpQbH0rXD5sY4w4-67vBpDWlSw6eEa-KkBKKZVZT7l6womPhSirSlHZO8pxwLjcZTFCUkdFM9UWBKjjqHa-dSi616lp0mBWplbKl9UH2OCke0UeE4lKPJr8lXFaqBXnQ_R5WeqW5y_buTWaPWUFFqzOOMwqcJg0SKiJRW8zA5ADvi-DxEqiCaz3EW8GqujYIv4xKpLDC_8WKIVjt6008HL_s21nl8XLB4uSqXLKsFbMUCPj6hS3xY3NKP8qmQ',
                          'content-type': 'application/json', 'Host': 'l6vyu26r1e.execute-api.us-east-1.amazonaws.com',
                          'origin': 'http://localhost:5173', 'priority': 'u=3, i', 'referer': 'http://localhost:5173/',
                          'sec-fetch-dest': 'empty', 'sec-fetch-mode': 'cors', 'sec-fetch-site': 'cross-site',
@@ -827,7 +887,7 @@ if __name__ == "__main__":
                                    'accept-encoding': ['gzip, deflate, br, zstd'],
                                    'accept-language': ['en-US,en;q=0.9'],
                                    'Authorization': [
-                                     'Bearer eyJraWQiOiJCYk5XMlFHNnVnTUtZSGJWUGRTdysrcDVzUG1TTzVPR20wWk9DVVZNbmhVPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI4NGE4NjRkOC0yMGQxLTcwNjQtZGYxNC0yYTNhZmVjMGYxMjUiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV8xcGdxU3pmNDUiLCJjbGllbnRfaWQiOiIzcTM0YzQ4bzZmdmFxYmRtc3N2dW92dTg2ayIsIm9yaWdpbl9qdGkiOiI3Yjc5OWVkMi1iYjkwLTRlMGQtOWUyYS1lZmNhOTAyMWFhNzQiLCJldmVudF9pZCI6ImFhMmZhZDc3LTYyNzEtNDI1Ny04YzE1LTNiZjg4NjZlYTJlNyIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3NzkwNDAzNTIsImV4cCI6MTc3OTA0Mzk1MiwiaWF0IjoxNzc5MDQwMzUyLCJqdGkiOiI5ZWE2M2ZiZS1kYWY4LTQyYzgtYTQ5ZS1hN2U4YWUwYzgzMTMiLCJ1c2VybmFtZSI6InNhbXNvbmJhYnVqaSJ9.EbsUU5PogY_iEufA_a4xcECuRK9JDFfXy2YMZ1xq3aS2qj6UxYK-blWTTuHr6vUTWeFHuUGZ_6QcFrfmbS-x6K04lLoic_4vdC41m4zlSAdnJyRmanINMDvFQzvYc2DiNISSEKJy3aw65a338UPlzY23VucHmfZvAgvs0AjdM6ynva417IwRy7PFwDsEQ4AN5m-7JpG4EpnCAJZN0QuqpvBEYiCh1WYEtIhdu7mCf_PaoBNmXBSzLt5rmuV6Q6pBuxI5UQ_dEhMFDGfeHpOViLz3rm1woiS55w-HyhOonBScVAwgb4UUI5DV2r6WKXg4dPCbaxGZnxOl4GjpBZ4V4w'],
+                                     'Bearer eyJraWQiOiJCYk5XMlFHNnVnTUtZSGJWUGRTdysrcDVzUG1TTzVPR20wWk9DVVZNbmhVPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI4NGE4NjRkOC0yMGQxLTcwNjQtZGYxNC0yYTNhZmVjMGYxMjUiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV8xcGdxU3pmNDUiLCJjbGllbnRfaWQiOiIzcTM0YzQ4bzZmdmFxYmRtc3N2dW92dTg2ayIsIm9yaWdpbl9qdGkiOiI3MmJhZjg1YS1hMDhkLTQzOTgtYmZkMi00NDhmOTAzMTIwMmQiLCJldmVudF9pZCI6IjY5OGJiZjZmLTFmNWUtNDc0Yy1iNzQzLWE0YTljYjcwMDc4ZSIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3NzkwNDk1MTgsImV4cCI6MTc3OTA1MzExOCwiaWF0IjoxNzc5MDQ5NTE4LCJqdGkiOiJkZDUxMThjNy0zMjFiLTRhNjUtODIzYy1lZTM3YWYzMjkxOWUiLCJ1c2VybmFtZSI6InNhbXNvbmJhYnVqaSJ9.MDVbCb4kXYi8y0ySSRM94KeJV4m0pzLa8CUaQ78Kpyo0tpL87kD4rxfTGy6wNTzk5xdam7-aiQUbM317gphUsAIw4zpQbH0rXD5sY4w4-67vBpDWlSw6eEa-KkBKKZVZT7l6womPhSirSlHZO8pxwLjcZTFCUkdFM9UWBKjjqHa-dSi616lp0mBWplbKl9UH2OCke0UeE4lKPJr8lXFaqBXnQ_R5WeqW5y_buTWaPWUFFqzOOMwqcJg0SKiJRW8zA5ADvi-DxEqiCaz3EW8GqujYIv4xKpLDC_8WKIVjt6008HL_s21nl8XLB4uSqXLKsFbMUCPj6hS3xY3NKP8qmQ'],
                                    'content-type': ['application/json'],
                                    'Host': ['l6vyu26r1e.execute-api.us-east-1.amazonaws.com'],
                                    'origin': ['http://localhost:5173'], 'priority': ['u=3, i'],
