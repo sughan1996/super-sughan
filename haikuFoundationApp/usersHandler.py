@@ -1,8 +1,8 @@
 """
 PK = "USER_ID"
 SK values allowed: ["TYPE#COGNITO_ID", "TYPE#EMAIL", "TYPE#PROFILE"]
-attributes = ["CREATED_AT", "UPDATED_AT", "TIMESTAMP"]
-Do not change PK/SK or attribute names in items.
+attributes = ["CREATED_AT", "UPDATED_AT", "TIMESTAMP", "LAST_LOGIN"]
+Do not change PK/SK or attribute names in items."
 """
 import os
 from typing import Any, Dict, Optional, List
@@ -65,10 +65,9 @@ def _build_item(userId: str, cognitoId: str, email: str, type_value: str) -> Dic
         raise ValueError("type must be a non-empty string")
     if type_value not in ALLOWED_TYPES:
         raise ValueError(f"type must be one of {sorted(ALLOWED_TYPES)}")
-    # Include both your logical attributes (PK/SK you want) and the actual table key attributes
+    # Only include actual DynamoDB key attributes (userId/metaData) and non-key attributes.
+    # Do NOT add logical USER_ID/TYPE as separate attributes.
     return {
-        PK: userId,                 # your logical PK attribute retained in the item
-        SK: type_value,             # your logical SK attribute retained in the item
         DDB_PK_ATTR: userId,        # actual DynamoDB partition key
         DDB_SK_ATTR: type_value,    # actual DynamoDB sort key
         "COGNITO_ID": cognitoId,
@@ -197,3 +196,4 @@ if __name__ == "__main__":
         print(get_user(demo_user))
     except Exception as e:
         raise e
+
