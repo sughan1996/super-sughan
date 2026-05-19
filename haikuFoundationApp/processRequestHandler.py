@@ -6,8 +6,8 @@ from urllib.request import urlopen
 import certifi
 from jose import jwt
 from jose.exceptions import JWTError, ExpiredSignatureError, JWTClaimsError
-from usersHandler import get_user_id_values
 
+from postController import post_profile_controller, post_home_controller
 
 AWS_REGION = "us-east-1"
 COGNITO_USER_POOL_ID = "us-east-1_1pgqSzf45"
@@ -462,8 +462,7 @@ class HomeController:
         }
 
     def post(self, event):
-        output = WELCOME_NOTE
-        return output
+        return post_home_controller(event)
 
 class ExploreController:
 
@@ -577,9 +576,7 @@ class ProfileController:
         }
 
     def post(self, event):
-      userId = event.get('body', {}).get('userId', None)
-      resp = get_user_id_values(userId=userId)
-      return resp
+      return post_profile_controller(event)
 
 class NotificationsController:
 
@@ -817,8 +814,8 @@ if __name__ == "__main__":
     # For local testing
     event_0 = {
       "httpMethod": "POST",
-      "body": json.dumps({"requestMethod": "/profile", "userId": "samsonbabuji"}),
+      "body": json.dumps({"requestMethod": "/home", "userId": "samsonbabuji"}),
       "headers": {
-        "Authorization": "Bearer eyJraWQiOiJCYk5XMlFHNnVnTUtZSGJWUGRTdysrcDVzUG1TTzVPR20wWk9DVVZNbmhVPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI4NGE4NjRkOC0yMGQxLTcwNjQtZGYxNC0yYTNhZmVjMGYxMjUiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV8xcGdxU3pmNDUiLCJjbGllbnRfaWQiOiIzcTM0YzQ4bzZmdmFxYmRtc3N2dW92dTg2ayIsIm9yaWdpbl9qdGkiOiIxYTBhODUyYy0zMTRlLTQzMDctOGI3Yi00MjUzZDcwNzM4ODciLCJldmVudF9pZCI6ImY2NDlmY2RmLTM3MGItNDAxNi1hYzNjLThkYjYwODI2NzE2MyIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3NzkxNzAwMTAsImV4cCI6MTc3OTE3MzYxMCwiaWF0IjoxNzc5MTcwMDEwLCJqdGkiOiI5N2ZiOTgzNC1mMTBmLTQwZTgtYTU0My05ZDMyZDUyNzNmMGUiLCJ1c2VybmFtZSI6InNhbXNvbmJhYnVqaSJ9.Xu-l3bMI8PaJu7bZmrSf_cZc1BtIN9jeWtDC0VDuaAdIYIXqlw5IuzQlCTSTwYwpMAgFkFIrUM2q462xnsw4M-7v9lcoLLJr2408wUdNXx-xJBfMSRsW4IG0__WkMUHfvO9WTFi_U4p6gLQmLmEiRtn6JLZ0OD23X5Kwm4qARW2N6zueVdG9e6HbAZAXN8FWTtOwBc7h6NaED-3QgTa6xCxKguFuYzXU7--eYPdlDdTmow6Fsrtab2TtY6WiLarrZHfxSNLKpep-0rpLQT-v3UclbKQigTlWp-sVFskmEOV5hClBu3s-tbQQLLQq1s25EdRg256E5zDA_nC-q-tBPQ"
+        "Authorization": "Bearer eyJraWQiOiIrWFZiU2E1WHN1YkJZT09odDFLM2YraEFFSFwvN2JIdm5NUU1SblMzU0NwST0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI4NGE4NjRkOC0yMGQxLTcwNjQtZGYxNC0yYTNhZmVjMGYxMjUiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfMXBncVN6ZjQ1IiwiY29nbml0bzp1c2VybmFtZSI6InNhbXNvbmJhYnVqaSIsIm9yaWdpbl9qdGkiOiI3OGYyODJhMy1mYTBjLTQ1ZTYtYjBkMC02Yzg0Mzc1NWQ3ZWMiLCJhdWQiOiIzcTM0YzQ4bzZmdmFxYmRtc3N2dW92dTg2ayIsImV2ZW50X2lkIjoiNjY3ZDA0OGEtMWQ0ZC00MGUyLTljYzktOTI2OGY5ZjFhODM2IiwidG9rZW5fdXNlIjoiaWQiLCJhdXRoX3RpbWUiOjE3NzkyMTM4OTUsImV4cCI6MTc3OTIxNzQ5NSwiaWF0IjoxNzc5MjEzODk1LCJqdGkiOiJhYjJkNWRhOS0yNGFlLTQyMDctOGNjOC1jOGM0YjhlZDFiNTMiLCJlbWFpbCI6InNhbXNvbmJhYnVqaS5tQGdtYWlsLmNvbSJ9.an9ZyAPxrq2MjCR-oL5j8exv7dE8-lF4hX3bRtXONthNzs5HuYLLwczmTobuk-O7cAIFR4Jvj03NsW-CgRaxnJlg_UYWsA2UMIEEhmyOUnntZkenVvLWOMPfY01HsOxL37hA8cijFW51iv23cCgvcRXxZyKq-M55k7urRJ_ga2o_m7w2KOUXBlcTtVqKXnvwtkY5PM7wa0lIBnf36TQ4pJtr9uv86uwfJ6MPgoX-3U3OhlBtAlmXKRIZfNuuauY__QPQsssk9avdsdbsAEhMkvj_4mkcWINUdmXf6Ju-A6toiGkKMRQK1yIN4AxyE8gDL95cFxWrxkhYo-4eZW9uTQ"
       }}
     print(lambda_handler(event_0, None))
