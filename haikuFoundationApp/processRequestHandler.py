@@ -2,9 +2,12 @@ import json
 import random
 import ssl
 from urllib.request import urlopen
+
 import certifi
 from jose import jwt
 from jose.exceptions import JWTError, ExpiredSignatureError, JWTClaimsError
+from usersHandler import get_user_id_values
+
 
 AWS_REGION = "us-east-1"
 COGNITO_USER_POOL_ID = "us-east-1_1pgqSzf45"
@@ -574,10 +577,9 @@ class ProfileController:
         }
 
     def post(self, event):
-        return {
-            "module": "PROFILE",
-            "action": "POST"
-        }
+      userId = event.get('body', {}).get('userId', None)
+      resp = get_user_id_values(userId=userId)
+      return resp
 
 class NotificationsController:
 
@@ -814,49 +816,9 @@ def lambda_handler(event, context):
 if __name__ == "__main__":
     # For local testing
     event_0 = {
-      "httpMethod": "OPTIONS",
-        "body": json.dumps({"requestMethod": "/topics"})
-    }
-    event_1 = {'resource': '/{proxy+}', 'path': '/haiku-foundation-path', 'httpMethod': 'POST',
-             'headers': {'accept': 'application/json, text/plain, */*', 'accept-encoding': 'gzip, deflate, br, zstd',
-                         'accept-language': 'en-US,en;q=0.9',
-                         'Authorization': 'Bearer eyJraWQiOiJCYk5XMlFHNnVnTUtZSGJWUGRTdysrcDVzUG1TTzVPR20wWk9DVVZNbmhVPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI4NGE4NjRkOC0yMGQxLTcwNjQtZGYxNC0yYTNhZmVjMGYxMjUiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV8xcGdxU3pmNDUiLCJjbGllbnRfaWQiOiIzcTM0YzQ4bzZmdmFxYmRtc3N2dW92dTg2ayIsIm9yaWdpbl9qdGkiOiI3MmJhZjg1YS1hMDhkLTQzOTgtYmZkMi00NDhmOTAzMTIwMmQiLCJldmVudF9pZCI6IjY5OGJiZjZmLTFmNWUtNDc0Yy1iNzQzLWE0YTljYjcwMDc4ZSIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3NzkwNDk1MTgsImV4cCI6MTc3OTA1MzExOCwiaWF0IjoxNzc5MDQ5NTE4LCJqdGkiOiJkZDUxMThjNy0zMjFiLTRhNjUtODIzYy1lZTM3YWYzMjkxOWUiLCJ1c2VybmFtZSI6InNhbXNvbmJhYnVqaSJ9.MDVbCb4kXYi8y0ySSRM94KeJV4m0pzLa8CUaQ78Kpyo0tpL87kD4rxfTGy6wNTzk5xdam7-aiQUbM317gphUsAIw4zpQbH0rXD5sY4w4-67vBpDWlSw6eEa-KkBKKZVZT7l6womPhSirSlHZO8pxwLjcZTFCUkdFM9UWBKjjqHa-dSi616lp0mBWplbKl9UH2OCke0UeE4lKPJr8lXFaqBXnQ_R5WeqW5y_buTWaPWUFFqzOOMwqcJg0SKiJRW8zA5ADvi-DxEqiCaz3EW8GqujYIv4xKpLDC_8WKIVjt6008HL_s21nl8XLB4uSqXLKsFbMUCPj6hS3xY3NKP8qmQ',
-                         'content-type': 'application/json', 'Host': 'l6vyu26r1e.execute-api.us-east-1.amazonaws.com',
-                         'origin': 'http://localhost:5173', 'priority': 'u=3, i', 'referer': 'http://localhost:5173/',
-                         'sec-fetch-dest': 'empty', 'sec-fetch-mode': 'cors', 'sec-fetch-site': 'cross-site',
-                         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.4 Safari/605.1.15',
-                         'X-Amzn-Trace-Id': 'Root=1-6a0a02a1-6e36e71338925cd070cf2edd',
-                         'X-Forwarded-For': '71.162.231.230', 'X-Forwarded-Port': '443', 'X-Forwarded-Proto': 'https'},
-             'multiValueHeaders': {'accept': ['application/json, text/plain, */*'],
-                                   'accept-encoding': ['gzip, deflate, br, zstd'],
-                                   'accept-language': ['en-US,en;q=0.9'],
-                                   'Authorization': [
-                                     'Bearer eyJraWQiOiJCYk5XMlFHNnVnTUtZSGJWUGRTdysrcDVzUG1TTzVPR20wWk9DVVZNbmhVPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI4NGE4NjRkOC0yMGQxLTcwNjQtZGYxNC0yYTNhZmVjMGYxMjUiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV8xcGdxU3pmNDUiLCJjbGllbnRfaWQiOiIzcTM0YzQ4bzZmdmFxYmRtc3N2dW92dTg2ayIsIm9yaWdpbl9qdGkiOiI3MmJhZjg1YS1hMDhkLTQzOTgtYmZkMi00NDhmOTAzMTIwMmQiLCJldmVudF9pZCI6IjY5OGJiZjZmLTFmNWUtNDc0Yy1iNzQzLWE0YTljYjcwMDc4ZSIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3NzkwNDk1MTgsImV4cCI6MTc3OTA1MzExOCwiaWF0IjoxNzc5MDQ5NTE4LCJqdGkiOiJkZDUxMThjNy0zMjFiLTRhNjUtODIzYy1lZTM3YWYzMjkxOWUiLCJ1c2VybmFtZSI6InNhbXNvbmJhYnVqaSJ9.MDVbCb4kXYi8y0ySSRM94KeJV4m0pzLa8CUaQ78Kpyo0tpL87kD4rxfTGy6wNTzk5xdam7-aiQUbM317gphUsAIw4zpQbH0rXD5sY4w4-67vBpDWlSw6eEa-KkBKKZVZT7l6womPhSirSlHZO8pxwLjcZTFCUkdFM9UWBKjjqHa-dSi616lp0mBWplbKl9UH2OCke0UeE4lKPJr8lXFaqBXnQ_R5WeqW5y_buTWaPWUFFqzOOMwqcJg0SKiJRW8zA5ADvi-DxEqiCaz3EW8GqujYIv4xKpLDC_8WKIVjt6008HL_s21nl8XLB4uSqXLKsFbMUCPj6hS3xY3NKP8qmQ'],
-                                   'content-type': ['application/json'],
-                                   'Host': ['l6vyu26r1e.execute-api.us-east-1.amazonaws.com'],
-                                   'origin': ['http://localhost:5173'], 'priority': ['u=3, i'],
-                                   'referer': ['http://localhost:5173/'], 'sec-fetch-dest': ['empty'],
-                                   'sec-fetch-mode': ['cors'], 'sec-fetch-site': ['cross-site'], 'User-Agent': [
-                 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.4 Safari/605.1.15'],
-                                   'X-Amzn-Trace-Id': ['Root=1-6a0a02a1-6e36e71338925cd070cf2edd'],
-                                   'X-Forwarded-For': ['71.162.231.230'], 'X-Forwarded-Port': ['443'],
-                                   'X-Forwarded-Proto': ['https']}, 'queryStringParameters': None,
-             'multiValueQueryStringParameters': None, 'pathParameters': {'proxy': 'haiku-foundation-path'},
-             'stageVariables': None,
-             'requestContext': {'resourceId': 'f5wivr', 'resourcePath': '/{proxy+}', 'httpMethod': 'POST',
-                                'extendedRequestId': 'dhVZOELSoAMEHtw=', 'requestTime': '17/May/2026:18:02:09 +0000',
-                                'path': '/haiku-foundation-stage/haiku-foundation-path', 'accountId': '322828741334',
-                                'protocol': 'HTTP/1.1', 'stage': 'haiku-foundation-stage', 'domainPrefix': 'l6vyu26r1e',
-                                'requestTimeEpoch': 1779040929039, 'requestId': 'a527b21f-560e-463e-8575-9805d46e275f',
-                                'identity': {'cognitoIdentityPoolId': None, 'accountId': None,
-                                             'cognitoIdentityId': None,
-                                             'caller': None, 'sourceIp': '71.162.231.230', 'principalOrgId': None,
-                                             'accessKey': None, 'cognitoAuthenticationType': None,
-                                             'cognitoAuthenticationProvider': None, 'userArn': None,
-                                             'userAgent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.4 Safari/605.1.15',
-                                             'user': None},
-                                'domainName': 'l6vyu26r1e.execute-api.us-east-1.amazonaws.com',
-                                'deploymentId': 'zaol4j',
-                                'apiId': 'l6vyu26r1e'}, 'body': '{"requestMethod":"/home"}', 'isBase64Encoded': False}
-    response = lambda_handler(event_1 , None)
-    print(response)
+      "httpMethod": "POST",
+      "body": json.dumps({"requestMethod": "/profile", "userId": "samsonbabuji"}),
+      "headers": {
+        "Authorization": "Bearer eyJraWQiOiJCYk5XMlFHNnVnTUtZSGJWUGRTdysrcDVzUG1TTzVPR20wWk9DVVZNbmhVPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI4NGE4NjRkOC0yMGQxLTcwNjQtZGYxNC0yYTNhZmVjMGYxMjUiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV8xcGdxU3pmNDUiLCJjbGllbnRfaWQiOiIzcTM0YzQ4bzZmdmFxYmRtc3N2dW92dTg2ayIsIm9yaWdpbl9qdGkiOiIxYTBhODUyYy0zMTRlLTQzMDctOGI3Yi00MjUzZDcwNzM4ODciLCJldmVudF9pZCI6ImY2NDlmY2RmLTM3MGItNDAxNi1hYzNjLThkYjYwODI2NzE2MyIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3NzkxNzAwMTAsImV4cCI6MTc3OTE3MzYxMCwiaWF0IjoxNzc5MTcwMDEwLCJqdGkiOiI5N2ZiOTgzNC1mMTBmLTQwZTgtYTU0My05ZDMyZDUyNzNmMGUiLCJ1c2VybmFtZSI6InNhbXNvbmJhYnVqaSJ9.Xu-l3bMI8PaJu7bZmrSf_cZc1BtIN9jeWtDC0VDuaAdIYIXqlw5IuzQlCTSTwYwpMAgFkFIrUM2q462xnsw4M-7v9lcoLLJr2408wUdNXx-xJBfMSRsW4IG0__WkMUHfvO9WTFi_U4p6gLQmLmEiRtn6JLZ0OD23X5Kwm4qARW2N6zueVdG9e6HbAZAXN8FWTtOwBc7h6NaED-3QgTa6xCxKguFuYzXU7--eYPdlDdTmow6Fsrtab2TtY6WiLarrZHfxSNLKpep-0rpLQT-v3UclbKQigTlWp-sVFskmEOV5hClBu3s-tbQQLLQq1s25EdRg256E5zDA_nC-q-tBPQ"
+      }}
+    print(lambda_handler(event_0, None))
