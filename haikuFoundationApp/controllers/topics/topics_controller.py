@@ -1,6 +1,6 @@
 import random
 
-from staticDataController import TOPICS_LIST
+from haikuFoundationApp.dbmodels.staticDataController import TOPICS_LIST
 
 
 class TopicController:

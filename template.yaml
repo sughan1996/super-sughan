@@ -1,3 +1,2 @@
 SIGNIN : https://us-east-11pgqszf45.auth.us-east-1.amazoncognito.com/login?client_id=3q34c48o6fvaqbdmssvuovu86k&response_type=code&scope=email+openid+phone&redirect_uri=https%3A%2F%2Fd84l1y8p4kdic.cloudfront.net
-
 SIGNUP : https://us-east-11pgqszf45.auth.us-east-1.amazoncognito.com/signup?client_id=3q34c48o6fvaqbdmssvuovu86k&redirect_uri=https%3A%2F%2Fd84l1y8p4kdic.cloudfront.net&response_type=code&scope=email+openid+phone

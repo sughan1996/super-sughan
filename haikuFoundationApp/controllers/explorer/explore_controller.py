@@ -1,6 +1,7 @@
 import random
 
-from staticDataController import EXPLORE_LIST_1, EXPLORE_LIST_2, EXPLORE_LIST_3, EXPLORE_LIST_4, EXPLORE_LIST_5, \
+from haikuFoundationApp.dbmodels.staticDataController import EXPLORE_LIST_1, EXPLORE_LIST_2, EXPLORE_LIST_3, EXPLORE_LIST_4, \
+    EXPLORE_LIST_5, \
     MANDATORY_LIST, ROMANTIC_LIST
 
 

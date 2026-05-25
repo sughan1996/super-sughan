@@ -1,5 +1,5 @@
-from poemsHandler import get_poem_values
-from usersHandler import get_user_id_values
+from haikuFoundationApp.jobs.poemsHandler import get_poem_values
+from haikuFoundationApp.jobs.usersHandler import get_user_id_values
 
 
 def post_profile_controller(event):

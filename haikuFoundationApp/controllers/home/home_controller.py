@@ -1,4 +1,4 @@
-from postController import post_home_controller
+from haikuFoundationApp.requester.postController import post_home_controller
 
 
 class HomeController:

@@ -6,11 +6,6 @@ Do not change PK/SK or attribute names in items.
 """
 
 import os
-from datetime import datetime, timezone
-from typing import Any, Dict, Optional, List
-
-import boto3
-from boto3.dynamodb.types import TypeSerializer, TypeDeserializer
 
 # ---------------- Config ----------------
 DYNAMODB_RESOURCE_ARN = "arn:aws:dynamodb:us-east-1:322828741334:table/haiku-foundation-stories-table"

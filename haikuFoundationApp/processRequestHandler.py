@@ -1,160 +1,20 @@
-from controllers.explore_controller import ExploreController
-from controllers.home_controller import HomeController
-from controllers.topics_controller import TopicController
-from postController import post_profile_controller
-from staticDataController import HAIKU_TYPES
+import json
 
+from haikuFoundationApp.controllers.explorer.explore_controller import ExploreController
+from haikuFoundationApp.controllers.featured.featured_controller import FeaturedController
+from haikuFoundationApp.controllers.home.home_controller import HomeController
+from haikuFoundationApp.controllers.logout.logout_controller import LogoutController
+from haikuFoundationApp.controllers.messages.messages_controller import MessagesController
+from haikuFoundationApp.controllers.notifications.notifications_controller import NotificationsController
+from haikuFoundationApp.controllers.profile.profile_controller import ProfileController
+from haikuFoundationApp.controllers.saved.saved_controller import SavedController
+from haikuFoundationApp.controllers.settings.settings_controller import SettingsController
+from haikuFoundationApp.controllers.topics.topics_controller import TopicController
+from haikuFoundationApp.controllers.trending.trending_controller import TrendingController
+from haikuFoundationApp.controllers.write.write_controller import WriteController
+from haikuFoundationApp.utils.authorizer import validate_jwt_token
+from haikuFoundationApp.utils.lazy_loader import LazyLoadingRegister
 
-AWS_REGION = "us-east-1"
-COGNITO_USER_POOL_ID = "us-east-1_1pgqSzf45"
-COGNITO_CLIENT_ID = "3q34c48o6fvaqbdmssvuovu86k"
-JWKS_CACHE = {"jwks": None}
-
-
-class SavedController:
-    def get(self, event):
-        return {
-            "module": "SAVED",
-            "action": "GET"
-        }
-
-    def post(self, event):
-        return {
-            "module": "SAVED",
-            "action": "POST"
-        }
-
-class FeaturedController:
-    def get(self, event):
-        return {
-            "module": "FEATURED",
-            "action": "GET"
-        }
-
-    def post(self, event):
-        return {
-            "module": "FEATURED",
-            "action": "POST"
-        }
-
-class WriteController:
-    def get(self, event):
-        return {
-            "module": "WRITE",
-            "action": "GET"
-        }
-
-    def post(self, event):
-        return {
-            "module": "WRITE",
-            "action": "POST"
-        }
-
-class MessagesController:
-
-    def get(self, event):
-        return {
-            "module": "MESSAGES",
-            "action": "GET"
-        }
-
-    def post(self, event):
-        return {
-            "module": "MESSAGES",
-            "action": "POST"
-        }
-
-class LogoutController:
-
-    def get(self, event):
-        return {
-            "module": "LOGOUT",
-            "action": "GET"
-        }
-
-    def post(self, event):
-        return {
-            "module": "LOGOUT",
-            "action": "POST"
-        }
-
-class ProfileController:
-
-    def get(self, event):
-        return {
-            "module": "PROFILE",
-            "action": "GET"
-        }
-
-    def post(self, event):
-      return post_profile_controller(event)
-
-class NotificationsController:
-
-    def get(self, event):
-        return {
-            "module": "NOTIFICATIONS",
-            "action": "GET"
-        }
-
-    def post(self, event):
-        return {
-            "module": "NOTIFICATIONS",
-            "action": "POST"
-        }
-
-class SettingsController:
-
-    def get(self, event):
-        return {
-            "module": "SETTINGS",
-            "action": "GET"
-        }
-
-    def post(self, event):
-        return {
-            "module": "SETTINGS",
-            "action": "POST"
-        }
-
-class TrendingController:
-
-  def get(self, event):
-    return {
-      "module": "TRENDING",
-      "action": "GET"
-    }
-
-  def post(self, event):
-    return {
-      "module": "TRENDING",
-      "action": "POST"
-    }
-
-class HaikuController:
-
-  def get(self, event):
-    return {
-      "module": "HAIKU",
-      "action": "GET"
-    }
-
-  def post(self, event):
-    return {
-      "module": "HAIKU",
-      "action": "POST"
-    }
-
-class HaikuTypesController:
-
-  def get(self, event):
-    return {
-      "module": "HAIKUTYPES",
-      "action": "GET"
-    }
-
-  def post(self, event):
-    return HAIKU_TYPES
 
 class NotFoundController:
 
@@ -163,23 +23,87 @@ class NotFoundController:
             "error": "Route not found"
         }
 
-CONTROLLERS = {
-    "/home": HomeController(),
-    "/explore": ExploreController(),
-    "/topics": TopicController(),
-    "/saved": SavedController(),
-    "/featured": FeaturedController(),
-    "/write": WriteController(),
-    "/profile": ProfileController(),
-    "/trending": TrendingController(),
-    "/haiku": HaikuController(),
-    "/messages": MessagesController(),
-    "/settings": SettingsController(),
-    "/notifications": NotificationsController(),
-    "/logout": LogoutController(),
-}
+
+CONTROLLERS = LazyLoadingRegister({
+    "/home": HomeController,
+    "/explore": ExploreController,
+    "/topics": TopicController,
+    "/saved": SavedController,
+    "/featured": FeaturedController,
+    "/write": WriteController,
+    "/profile": ProfileController,
+    "/trending": TrendingController,
+    "/messages": MessagesController,
+    "/settings": SettingsController,
+    "/notifications": NotificationsController,
+    "/logout": LogoutController,
+})
 
 FALLBACK = NotFoundController()
 
 
+def parse_body(event):
+    body = event.get("body")
+    if not body:
+        return {}
+    try:
+        return json.loads(body)
+    except Exception as e:
+        print("JSON parse error:", e)
+        return {}
 
+
+def build_response(status, body):
+    return {
+        "statusCode": status,
+        "headers": {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "Content-Type,Authorization",
+            "Access-Control-Allow-Methods": "OPTIONS,GET,POST,PUT,PATCH,DELETE",
+            "Content-Type": "application/json"
+        },
+        "body": json.dumps(body)
+    }
+
+
+def lambda_handler(event, context):
+    print("EVENT:", event)
+    http_method = (
+        event.get("httpMethod", "")
+        .upper()
+    )
+    if http_method == "OPTIONS":
+      return build_response(200, {"message": "CORS preflight success"})
+    body = parse_body(event)
+    request_method = body.get("requestMethod")
+    if not request_method:
+      return build_response(400, {"error": "Missing requestMethod"})
+    controller = CONTROLLERS.get(request_method, FALLBACK)
+    handler = getattr(
+        controller,
+        http_method.lower(),
+        None
+    )
+    if not handler:
+      return build_response(405, {"error": f"{http_method} not supported for {request_method}"})
+    user_claims = None
+    if http_method in ("GET", "POST"):
+      headers = event.get('headers', {}) or {}
+      auth_header = headers.get('Authorization') or headers.get('authorization')
+      try:
+        user_claims = validate_jwt_token(auth_header)
+      except Exception as e:
+        return build_response(401, {"error": str(e)})
+    controller_event = {
+        "httpMethod": http_method,
+        "route": request_method,
+        "body": body,
+        "headers": event.get("headers", {}),
+      "user": user_claims or (
+            event
+            .get("requestContext", {})
+            .get("authorizer")
+        )
+    }
+    result = handler(controller_event)
+    return build_response(200, result)
