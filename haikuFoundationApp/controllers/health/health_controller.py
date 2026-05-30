@@ -29,7 +29,7 @@ def fetch_guardian_health_news(
     params = {
         "api-key": GUARDIAN_API_KEY,
         "q": random.choice(HEALTH_QUERIES),
-        "section": "health",  # more relevant than "world" for health topics
+        "section": "society",  # more relevant than "world" for health topics
         "page-size": page_size,
         "page": random.randint(1, 5),
         "show-fields": "trailText,thumbnail,byline",
@@ -81,5 +81,4 @@ class HealthNewsController:
 if __name__ == "__main__":
     controller = HealthNewsController()
     result = controller.post()
-
     print(result)

@@ -2,7 +2,8 @@ import json
 
 from haikuFoundationApp.controllers.explorer.explore_controller import ExploreController
 from haikuFoundationApp.controllers.international.international_controller import InternationalController
-from haikuFoundationApp.controllers.home.home_controller import HomeController
+from haikuFoundationApp.controllers.health.health_controller import HealthNewsController
+from haikuFoundationApp.controllers.poems.poems_controller import PoemsController
 from haikuFoundationApp.controllers.logout.logout_controller import LogoutController
 from haikuFoundationApp.controllers.messages.messages_controller import MessagesController
 from haikuFoundationApp.controllers.notifications.notifications_controller import NotificationsController
@@ -25,11 +26,12 @@ class NotFoundController:
 
 
 CONTROLLERS = LazyLoadingRegister({
-    "/poems": HomeController,
+    "/poems": PoemsController,
     "/explore": ExploreController,
     "/topics": TopicController,
     "/saved": SavedController,
     "/international": InternationalController,
+    "/health": HealthNewsController,
     "/write": WriteController,
     "/profile": ProfileController,
     "/trending": TrendingController,
