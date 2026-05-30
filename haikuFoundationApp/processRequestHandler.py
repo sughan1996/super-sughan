@@ -1,7 +1,7 @@
 import json
 
 from haikuFoundationApp.controllers.explorer.explore_controller import ExploreController
-from haikuFoundationApp.controllers.featured.featured_controller import FeaturedController
+from haikuFoundationApp.controllers.international.international_controller import InternationalController
 from haikuFoundationApp.controllers.home.home_controller import HomeController
 from haikuFoundationApp.controllers.logout.logout_controller import LogoutController
 from haikuFoundationApp.controllers.messages.messages_controller import MessagesController
@@ -29,7 +29,7 @@ CONTROLLERS = LazyLoadingRegister({
     "/explore": ExploreController,
     "/topics": TopicController,
     "/saved": SavedController,
-    "/featured": FeaturedController,
+    "/international": InternationalController,
     "/write": WriteController,
     "/profile": ProfileController,
     "/trending": TrendingController,

@@ -31,8 +31,16 @@ event_2 = {
     "headers": {
         "Authorization": 'Bearer ' + access_token}}
 
+
+event_3 = {
+    "httpMethod": "POST",
+    "body": json.dumps({"requestMethod": "/international", "userId": "samsonbabuji"}),
+    "headers": {
+        "Authorization": 'Bearer ' + access_token}}
+
+
 if __name__ == "__main__":
-    print(lambda_handler(event_0, None))
+    print(lambda_handler(event_3, None))
     # print(lambda_handler(event_1, None))
     # print(lambda_handler(event_2, None))
 
