@@ -1,18 +1,18 @@
 from __future__ import annotations
 
 import random
-import requests
-from typing import Any, Dict, List
+from typing import Any, Dict
 
+import requests
 
 GUARDIAN_API_KEY = "b1ec3d19-17a3-499c-822c-246cf2def0d0"
 GUARDIAN_URL = "https://content.guardianapis.com/search"
 
-HEALTH_QUERIES = [
-    "health",
+SOCIETY_QUERIES= [
+    "society",
     "medicine",
-    "public health",
-    "mental health",
+    "public society",
+    "mental society",
     "wellness",
     "disease",
 ]
@@ -23,13 +23,13 @@ def fetch_guardian_health_news(
     page_size: int = 50,
 ) -> Dict[str, Any]:
     """
-    Fetch health-related news from The Guardian API.
+    Fetch society-related news from The Guardian API.
     """
 
     params = {
         "api-key": GUARDIAN_API_KEY,
-        "q": random.choice(HEALTH_QUERIES),
-        "section": "society",  # more relevant than "world" for health topics
+        "q": random.choice(SOCIETY_QUERIES),
+        "section": "society",  # more relevant than "world" for society topics
         "page-size": page_size,
         "page": random.randint(1, 5),
         "show-fields": "trailText,thumbnail,byline",
@@ -45,7 +45,7 @@ def fetch_guardian_health_news(
     random.shuffle(results)
 
     return {
-        "category": "health",
+        "category": "society",
         "count": min(featured_count, len(results)),
         "articles": [_parse_article(a) for a in results[:featured_count]],
     }
@@ -67,7 +67,7 @@ def _parse_article(article: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
-class HealthNewsController:
+class SocietyController:
     def get(self, event: Dict[str, Any]) -> Dict[str, Any]:
         return {
             "module": "HEALTH_NEWS",
@@ -79,6 +79,6 @@ class HealthNewsController:
 
 
 if __name__ == "__main__":
-    controller = HealthNewsController()
+    controller = SocietyController()
     result = controller.post()
     print(result)

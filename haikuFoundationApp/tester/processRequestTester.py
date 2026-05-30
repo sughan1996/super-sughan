@@ -40,12 +40,19 @@ event_3 = {
 
 event_4 = {
     "httpMethod": "POST",
-    "body": json.dumps({"requestMethod": "/health", "userId": "samsonbabuji"}),
+    "body": json.dumps({"requestMethod": "/society", "userId": "samsonbabuji"}),
+    "headers": {
+        "Authorization": 'Bearer ' + access_token}}
+
+
+event_5 = {
+    "httpMethod": "POST",
+    "body": json.dumps({"requestMethod": "/lifestyle", "userId": "samsonbabuji"}),
     "headers": {
         "Authorization": 'Bearer ' + access_token}}
 
 if __name__ == "__main__":
-    print(lambda_handler(event_3, None))
+    print(lambda_handler(event_4, None))
     # print(lambda_handler(event_1, None))
     # print(lambda_handler(event_2, None))
 
