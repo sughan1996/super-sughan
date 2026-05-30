@@ -45,7 +45,7 @@ event_4 = {
         "Authorization": 'Bearer ' + access_token}}
 
 if __name__ == "__main__":
-    print(lambda_handler(event_4, None))
+    print(lambda_handler(event_3, None))
     # print(lambda_handler(event_1, None))
     # print(lambda_handler(event_2, None))
 
