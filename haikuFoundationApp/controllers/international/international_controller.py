@@ -22,7 +22,7 @@ GEOPOLITICS_QUERIES = [
 ]
 
 
-def get_geopolitics_news(featured_count: int = 10) -> dict:
+def get_geopolitics_news(featured_count: int = 32) -> dict:
     params = {
         "api-key": GUARDIAN_API_KEY,
         "q": random.choice(GEOPOLITICS_QUERIES),

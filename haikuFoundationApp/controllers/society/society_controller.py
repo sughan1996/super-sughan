@@ -19,7 +19,7 @@ SOCIETY_QUERIES= [
 
 
 def fetch_guardian_health_news(
-    featured_count: int = 10,
+    featured_count: int = 32,
     page_size: int = 50,
 ) -> Dict[str, Any]:
     """
