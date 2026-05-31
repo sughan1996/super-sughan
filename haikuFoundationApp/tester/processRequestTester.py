@@ -51,8 +51,14 @@ event_5 = {
     "headers": {
         "Authorization": 'Bearer ' + access_token}}
 
+event_5 = {
+    "httpMethod": "POST",
+    "body": json.dumps({"requestMethod": "/sports", "userId": "samsonbabuji"}),
+    "headers": {
+        "Authorization": 'Bearer ' + access_token}}
+
 if __name__ == "__main__":
-    print(lambda_handler(event_4, None))
+    print(lambda_handler(event_5, None))
     # print(lambda_handler(event_1, None))
     # print(lambda_handler(event_2, None))
 
