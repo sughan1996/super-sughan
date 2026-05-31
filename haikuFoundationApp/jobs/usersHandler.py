@@ -235,6 +235,7 @@ def set_phone_number(userId: str, value: str) -> Dict[str, Any]:
 # ---------------- CLI demo (optional) ----------------
 if __name__ == "__main__":
     try:
+        print(get_user_id_values("sughanrichardson"))
         out = create_user(
             userId="samsonbabuji",
             cognito_id="84a864d8-20d1-7064-df14-2a3afec0f125",
@@ -246,7 +247,7 @@ if __name__ == "__main__":
             phone_number="+919382266099",
         )
         print(out)
-        print(get_record("samsonbabuji", "TYPE#EMAIL"))
+        print(get_record("samsonbabuji", "TYPE#COGNITO_ID"))
         print(get_record("samsonbabuji", "TYPE#FIRST_NAME"))
         print(get_user_id_values("samsonbabuji"))
     except Exception as e:

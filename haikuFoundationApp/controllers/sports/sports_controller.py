@@ -4,7 +4,7 @@ import requests
 
 GUARDIAN_API_KEY = "b1ec3d19-17a3-499c-822c-246cf2def0d0"
 GUARDIAN_URL = "https://content.guardianapis.com/search"
-
+GUARDIAN_CONTENT_URL = "https://content.guardianapis.com"
 SPORTS_QUERIES = [
     "sports",
     "football",
@@ -69,6 +69,9 @@ def get_sports_news(featured_count: int = 10) -> dict:
             for article in articles[:featured_count]
         ],
     }
+
+
+
 
 
 class SportsController:

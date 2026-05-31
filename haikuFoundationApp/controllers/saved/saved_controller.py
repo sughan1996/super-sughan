@@ -1,3 +1,5 @@
+from haikuFoundationApp.jobs.usersActivityHandler import get_users_saved_articles
+
 class SavedController:
     def get(self, event):
         return {
@@ -6,7 +8,8 @@ class SavedController:
         }
 
     def post(self, event):
-        return {
-            "module": "SAVED",
-            "action": "POST"
-        }
+        userId = event['body']['userId']
+        resp = get_users_saved_articles(userId)
+        return resp
+
+
